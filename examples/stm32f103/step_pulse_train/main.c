@@ -62,20 +62,17 @@ int main(void){
 }
 
 
-void TIM1_UP_IRQHandler(void){
-
+void TIM1_UP_IRQHandler(void)
+{
 	TimClearFlag(TIM1, TIM_SR_FLAG_UI);
 	counter++;
-
 	if(counter < 10)
     {
         TIM1->ARR += 50;
         TIM1->CCR1 += 25;
 	}
-    
     if(counter >= TOTAL_STEPS)
     {
         TimDisable(TIM1);
     }
-
 }
