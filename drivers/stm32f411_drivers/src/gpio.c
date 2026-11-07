@@ -27,6 +27,7 @@ void Gpio_Init(GPIOx_Config_t* pGpioConfig, GPIO_t* pGPIO)
     {
         //Output type
         //pGpioConfig->AFOutputType = 1;
+        pGPIO->OTYPER &= ~((0b1) << (pGpioConfig->Pin));
         pGPIO->OTYPER |= ((pGpioConfig->AFOutputType) << (pGpioConfig->Pin));
 
         if(pGpioConfig->Pin <= GPIO_PIN7)
