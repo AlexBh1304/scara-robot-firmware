@@ -3,7 +3,7 @@ CFLAGS = -mcpu=cortex-m4 -g -O0 -c -Wall -Wextra -nostdlib  -I/home/Alex/BARE_ME
 LINKFLAGS = -mcpu=cortex-m4 -g -O0 -T linker.ld -Wall -Wextra -nostdlib  -I/home/Alex/BARE_METAL/scara-robot-firmware/drivers/stm32f411_drivers/inc  -I/home/Alex/BARE_METAL/scara-robot-firmware/drivers/common
 
 
-BUILDDIR = /home/Alex/BARE_METAL/scara-robot-firmware/build/stm32f411/sensor_read/
+BUILDDIR = /home/Alex/BARE_METAL/scara-robot-firmware/build/stm32f411/rxusart/
 
 all: final
 

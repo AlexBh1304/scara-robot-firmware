@@ -137,3 +137,40 @@ void I2CxClockControl(I2C_t* pI2C, uint8_t Action)
 
 
 */
+void USARTxClockControl(USART_t* pUSART, uint8_t Action)
+{
+    if(Action == ENABLE)
+    {
+        if(pUSART == USART1)
+        {
+            RCC->APB2ENR |= (1 << 4);
+        }
+        else if(pUSART == USART2)
+        {
+            RCC->APB1ENR |= (1 << 17);
+        }
+        else if(pUSART == USART6)
+        {
+            RCC->APB2ENR |= (1 << 5);
+        }
+    }
+    
+    if(Action == DISABLE)
+    {
+        if(pUSART == USART1)
+        {
+            RCC->APB2ENR &= ~(1 << 4);
+        }
+        else if(pUSART == USART2)
+        {
+            RCC->APB1ENR &= ~(1 << 17);
+        }
+        else if(pUSART == USART6)
+        {
+            RCC->APB2ENR &= ~(1 << 5);
+        }
+    }
+    
+}
+
+

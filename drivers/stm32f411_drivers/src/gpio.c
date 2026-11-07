@@ -39,8 +39,8 @@ void Gpio_Init(GPIOx_Config_t* pGpioConfig, GPIO_t* pGPIO)
         else if(pGpioConfig->Pin >= GPIO_PIN8)
         {
             //High Register
-            pGPIO->AFRH &= ~((0b1111) << (pGpioConfig->Pin * 4));
-            pGPIO->AFRH |= ((pGpioConfig->AFNumber) << (pGpioConfig->Pin * 4));
+            pGPIO->AFRH &= ~((0b1111) << (((pGpioConfig->Pin) % 8) * 4));
+            pGPIO->AFRH |= ((pGpioConfig->AFNumber) << (((pGpioConfig->Pin) % 8) * 4));
         }
     }
 

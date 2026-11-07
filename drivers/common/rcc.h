@@ -31,6 +31,7 @@
 void GPIOxClockControl(GPIO_t* pGPIO, uint8_t Action);
 void TIMxClockControl(TIM_t* pTIM, uint8_t Action);
 void I2CxClockControl(I2C_t* pI2C, uint8_t Action);
+void USARTxClockControl(USART_t* pUSART, uint8_t Action);
 //void ADCxClockControl(ADC_t* pADC, uint8_t Action);
 void ChangeSysClockPLL();
 
