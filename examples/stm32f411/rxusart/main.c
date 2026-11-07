@@ -9,6 +9,7 @@ int main()
     USART_INIT();
     uint8_t data;
     uint8_t rxdata;
+    uint8_t rxdata1;
     uint8_t data1;
     uint16_t raw_angle;
     uint16_t lower;
@@ -25,7 +26,11 @@ int main()
     while(1)
     {
         UsartRxByte(&rxdata, USART1);   
+        UsartRxByte(&rxdata1, USART1);   
+        //raw_angle = ((rxdata << 8) | (rxdata1));
+        
         UsartSendByte(&rxdata, USART1);   
+        UsartSendByte(&rxdata1, USART1);   
         for(volatile uint32_t i=0; i<500000; i++);
     }
 
