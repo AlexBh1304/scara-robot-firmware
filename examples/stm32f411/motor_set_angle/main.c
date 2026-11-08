@@ -1,14 +1,15 @@
 #include "stm32f411.h"
-#define ANGLE   1024
 #define TOLERANCE   5
 
 
 void I2C1_Init();
 void USART_INIT();
 void TIMER_INIT();
+void GPIO_INIT();
 
 int main()
 {
+    GPIO_INIT();
     I2C1_Init();
     USART_INIT();
     TIMER_INIT();
@@ -22,6 +23,8 @@ int main()
     uint16_t lower;
     uint16_t higher;
     uint32_t temp;
+    int32_t d1;
+    int32_t d2;
     //change clock to hse   
     RCC->CR |= (1 << 16);
     while(!(RCC->CR &(1 << 17)));
@@ -41,7 +44,7 @@ int main()
     I2C1->TRISE |= (0b11010); //1000ns / 40ns = 25 + 1 = 26
     
     //Ack enable
-
+    
 
     //Own address?
     //I2C1->OAR1 |= (0b100000010110111);
@@ -52,15 +55,11 @@ int main()
     UsartRxByte(&rxdata, USART1);   
     UsartRxByte(&rxdata1, USART1);   
     raw_angle_wanted = ((rxdata << 8) | (rxdata1));
+    
 
+    //measurement
 
-    do
-    {
-
-        
-    TIM3->CR1 |= (0b1);
-
-
+    /*----------RAW angle measurement-------*/
 
     // Set the START bit in the I2C_CR1 register to generate a Start condition
     I2C1->CR1 |= (0b1 << 8);
@@ -124,11 +123,114 @@ int main()
 
 /* ---------Ev7 ----------------*/
     raw_angle = ((data << 8) | (data1));
+/*----------RAW angle measurement-------*/
+    
+
+    if(raw_angle > raw_angle_wanted)
+    {
+        d1 = raw_angle - raw_angle_wanted; 
+        d2 = (4095 - raw_angle) + raw_angle_wanted; 
+        if(d1 > d2)
+        {
+            Gpio_Pin_Reset(GPIOB, GPIO_PIN2);
+        }
+        else
+        {
+            Gpio_Pin_Set(GPIOB, GPIO_PIN2);
+        }
+    }
+    else
+    {
+        d1 = raw_angle_wanted - raw_angle; 
+        d2 = (4095 - raw_angle_wanted) + raw_angle; 
+        if(d1 < d2)
+        {
+            Gpio_Pin_Reset(GPIOB, GPIO_PIN2);
+        }
+        else
+        {
+            Gpio_Pin_Set(GPIOB, GPIO_PIN2);
+        }
+
+    }
+    
+    do
+    {
+
+        
+    TIM3->CR1 |= (0b1);
+
+    /*----------RAW angle measurement-------*/
+
+    // Set the START bit in the I2C_CR1 register to generate a Start condition
+    I2C1->CR1 |= (0b1 << 8);
+
+    while(!(I2C1->SR1 & 0b1));
+
+    temp = I2C1->SR1;
+
+    I2C1->DR = 0b01101100;
+    //I2C1->DR = 0b01010001;
+    
+    //Stop genLration
+    //I2C1->CR1 |= (0b1 << 9);
+    
+    while(!(I2C1->SR1 & 0b10));
+
+    temp = I2C1->SR1;
+    temp = I2C1->SR2;
+    
+    I2C1->DR = 0x0C;
+
+    //Start condition
+    I2C1->CR1 |= (0b1 << 8);
+    
+    //Wait for sb flag
+    while(!(I2C1->SR1 & 0b1));
+    
+    //Ev5
+    temp = I2C1->SR1;
+
+    I2C1->DR = 0b01101101;
+    //Wait for EV6 to start
+    while(!(I2C1->SR1 & 0b10));
+
+ 
+/* ---------Ev6 ----------------*/
+    
+    I2C1->CR1 |= (0b1 << 10);
+
+
+    temp = I2C1->SR1;
+    temp = I2C1->SR2;
+
+/* ---------Ev6 ----------------*/
+
+
+/* ---------Ev7_1 ----------------*/
+
+    while(!(I2C1->SR1 & 0b1000000));
+    data = I2C1->DR;
+
+    I2C1->CR1 &= ~(0b1 << 10);
+    //Stop
+    I2C1->CR1 |= (0b1 << 9);
+
+/* ---------Ev7_1 ----------------*/
+
+/* ---------Ev7 ----------------*/
+    while(!(I2C1->SR1 & 0b1000000));
+    data1 = I2C1->DR;
+
+/* ---------Ev7 ----------------*/
+    raw_angle = ((data << 8) | (data1));
+/*----------RAW angle measurement-------*/
+
     //UsartSendByte(&data, USART1);   
     //UsartSendByte(&data1, USART1);   
     //TO DO; CREATE A DELAY FUNCITION USING THE SYSTICK 
     //for(volatile uint32_t i = 0; i< 500000; i++);
-    }while((raw_angle != raw_angle_wanted));
+    }while((raw_angle <= (raw_angle_wanted - TOLERANCE)) || (raw_angle >= (raw_angle_wanted + TOLERANCE)));
 
     TIM3->CR1 &= ~(0b1);
     }
@@ -231,3 +333,14 @@ void I2C1_Init()
     sda_pin.AFNumber = AF04;
     Gpio_Init(&sda_pin,GPIOB);
 }
+
+
+void GPIO_INIT()
+{
+    GPIOx_Config_t dir_pin = {0};  
+    dir_pin.Pin = GPIO_PIN2;
+    dir_pin.Mode = GENERAL_PURPOSE_OUTPUT_PP_MODE;
+    dir_pin.OutputSpeed = HIGH_OUTPUT_SPEED;
+    Gpio_Init(&dir_pin,GPIOB);
+}
+
