@@ -12,6 +12,10 @@ typedef struct
 
 }I2C_Config_t;
 
+void GenerateStartCondition(I2C_t I2C);
+void MasterSendAddress(I2C_t I2C, uint8_t deviceAddress);
+
+
 
 
 #endif /*USING_STM32F411*/
