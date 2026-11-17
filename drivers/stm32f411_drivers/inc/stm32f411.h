@@ -115,6 +115,40 @@ typedef struct
 #define I2C2_BASE_ADDRESS (0x40005800)
 #define I2C3_BASE_ADDRESS (0x40005C00)
 
+//I2Cx CR1 Bit register positions
+#define I2Cx_CR1_PE 0
+#define I2Cx_CR1_SMBUS 1
+#define I2Cx_CR1_SMBTYPE 3
+#define I2Cx_CR1_ENARP 4
+#define I2Cx_CR1_ENPEC 5
+#define I2Cx_CR1_ENGC 6
+#define I2Cx_CR1_NOSTRETCH 7
+#define I2Cx_CR1_START 8
+#define I2Cx_CR1_STOP 9
+#define I2Cx_CR1_ACK 10
+#define I2Cx_CR1_POS 11
+#define I2Cx_CR1_PEC 12
+#define I2Cx_CR1_ALERT 13
+#define I2Cx_CR1_SWRST 15
+
+//I2Cx SR1 Bit Flag masks
+#define SR1_SB_FLAGMASK (1 << 0)
+#define SR1_ADDR_FLAGMASK (1 << 1)
+#define SR1_BTF_FLAGMASK (1 << 2)
+#define SR1_ADD10_FLAGMASK (1 << 3)
+#define SR1_STOPF_FLAGMASK (1 << 4)
+#define SR1_RXNE_FLAGMASK (1 << 6)
+#define SR1_TXE_FLAGMASK (1 << 7)
+#define SR1_BERR_FLAGMASK (1 << 8)
+#define SR1_ARLO_FLAGMASK (1 << 9)
+#define SR1_AF_FLAGMASK (1 << 10)
+#define SR1_OVR_FLAGMASK (1 << 11)
+#define SR1_PECERR_FLAGMASK (1 << 12)
+#define SR1_TIMEOUT_FLAGMASK (1 << 14)
+#define SR1_SMBALERT_FLAGMASK (1 << 15)
+
+
+
 #define I2C1  ((I2C_t*)I2C1_BASE_ADDRESS)
 #define I2C2  ((I2C_t*)I2C2_BASE_ADDRESS)
 #define I2C3  ((I2C_t*)I2C3_BASE_ADDRESS)
@@ -159,7 +193,7 @@ typedef struct
 #include "rcc.h"
 #include "usart.h"
 #include "tim.h"
-//#include "i2c.h"
+#include "i2c.h"
 
 
 #endif
