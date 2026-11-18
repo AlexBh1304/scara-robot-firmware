@@ -2,6 +2,14 @@
 
 Bare-metal firmware for a 3-axis SCARA robot arm, written in C for STM32 microcontrollers. The project is developed on an **STM32F103** and is being **ported to the STM32F411**, using a small hardware abstraction layer so the robot logic does not depend on the chip.
 
+<p align="center">
+  <img src="assets/ScaraMovement.gif" width="650">
+</p>
+
+<p align="center">
+  <em>SCARA robot executing a point-to-point movement to a target position.</em>
+</p>
+
 > **Status: work in progress.** Expected completion: **December 2026**. See the [status table](#status) and [roadmap](#roadmap) for what works today.
 
 ## Goals
@@ -29,7 +37,7 @@ Pinout and wiring notes: see [`docs/`](docs/) *(to be added)*.
 
 ## Repository layout
 
-```
+```text
 .
 ├── src/                 Robot logic, platform independent
 │   ├── kinematics/      Forward / inverse kinematics
@@ -49,9 +57,7 @@ Pinout and wiring notes: see [`docs/`](docs/) *(to be added)*.
 └── docs/                Diagrams, notes, scope captures
 ```
 
-The F103 drivers live in their own repository,
-[BluePill-s-Driver](https://github.com/AlexBh1304/BluePill-s-Driver),
-and are included here as a git submodule.
+The F103 drivers live in their own repository, [BluePill-s-Driver](https://github.com/AlexBh1304/BluePill-s-Driver), and are included here as a git submodule.
 
 ## Status
 
@@ -80,6 +86,26 @@ Things I learned while building it:
 
 - Forcing an update event (`UG`) also sets the update flag, which fires an interrupt as soon as the interrupt is enabled. The flag must be cleared before enabling the interrupt.
 - Variables shared between an ISR and `main` must be `volatile`.
+
+## Motion Control
+
+### Step Pulse Generation
+
+The following logic analyzer capture shows the data transmission and control signals associated with the step pulse generation sequence used to execute the robot movement.
+
+<p align="center">
+  <img src="assets/SensorDataTx.jpg" width="750">
+</p>
+
+### Velocity Ramp
+
+The step pulse frequency determines the motor's stepping rate. By dynamically adjusting the timer period, the firmware can control the motor's velocity throughout a movement.
+
+The following diagram illustrates the planned approach for implementing a velocity ramp by modifying the timer frequency during motion.
+
+<p align="center">
+  <img src="assets/VelocityRamp.jpg" width="750">
+</p>
 
 ## Getting started
 
