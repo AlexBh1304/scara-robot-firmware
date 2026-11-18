@@ -91,52 +91,41 @@ void TIMxClockControl(TIM_t* pTIM, uint8_t Action)
 
 
 
-//TODO
-/*
 void I2CxClockControl(I2C_t* pI2C, uint8_t Action)
 {
     if(Action == ENABLE)
     {
-        if(pTIM == TIM2)
+        if(pI2C == I2C1)
         {
-            RCC->APB1ENR |= (1 << 0);
+            RCC->APB1ENR |= (1 << 21);
         }
-        else if(pTIM == TIM5)
+        else if(pI2C == I2C2)
         {
-            RCC->APB1ENR |= (1 << 1);
+            RCC->APB1ENR |= (1 << 22);
         }
-        else if(pTIM == TIM4)
+        else if(pI2C == I2C3)
         {
-            RCC->APB1ENR |= (1 << 2);
+            RCC->APB1ENR |= (1 << 23);
         }
-        else if(pTIM == TIM5)
-        {
-            RCC->APB1ENR |= (1 << 3);
-        }
+        
     }
     else if(Action == DISABLE)
     {
-        if(pTIM == TIM2)
+        if(pI2C == I2C1)
         {
-            RCC->APB1ENR &= ~(1 << 0);
+            RCC->APB1ENR &= ~(1 << 21);
         }
-        else if(pTIM == TIM5)
+        else if(pI2C == I2C2)
         {
-            RCC->APB1ENR &= ~(1 << 1);
+            RCC->APB1ENR &= ~(1 << 22);
         }
-        else if(pTIM == TIM4)
+        else if(pI2C == I2C3)
         {
-            RCC->APB1ENR &= ~(1 << 2);
-        }
-        else if(pTIM == TIM5)
-        {
-            RCC->APB1ENR &= ~(1 << 3);
+            RCC->APB1ENR &= ~(1 << 23);
         }
     }
 }
 
-
-*/
 void USARTxClockControl(USART_t* pUSART, uint8_t Action)
 {
     if(Action == ENABLE)
