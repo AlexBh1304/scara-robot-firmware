@@ -1,30 +1,78 @@
 #define USING_STM32F411
 #include "tim.h"
 
-void TimInit(Timer_Config* pTimConfig, TIM_t* TIMx)
+void TimInit(TIM_t* TIMx, Timer_Config* pTimConfig)
 {
-    //1
-    TIMx->ARR = pTimConfig->ARR;
-    TIMx->PSC =  pTimConfig->PSC;
-    //TIMx->MODE = pTimConfig->MODE;
-    TIMx->CCR1 = pTimConfig->CCR1;
-    //CCMRx allows you to configure the output of the selected channel
-    //CCRx sets the value
+
+    TIMxClockControl(TIMx, ENABLE);
+
+    if(pTimConfig->TimerOutput == ENABLE)
+    {
+        GPIOx_Config_t timerPin;   
+        timerPin.Pin = pTimConfig->OutputPinNumber;
+        timerPin.Mode = ALTERNATE_FUNCTION_MODE;
+        timerPin.OutputSpeed = HIGH_OUTPUT_SPEED;
+        timerPin.AFOutputType = 0;
+        timerPin.AFNumber = pTimConfig->AFNumber;
+        Gpio_Init(&timerPin, pTimConfig->OutputPinPort);
+    }
+        
+    if(pTimConfig->TimerMode == PWM)
+    {
+        //PSC = Preescaler from Peripheralclock
+        TIMx->PSC = pTimConfig->PSC;
+        //ARR = PWM frecuency 
+        TIMx->ARR = pTimConfig->ARR;
+        //ARPE CR1 Auto reload preload enable
+        TIMx->CR1 |= (0b1 << 7);
+        //EGR UG bit Update generation
+        TIMx->EGR |= (0b1);
+
+
+        switch(pTimConfig->TimerxChannelx)
+        {
+            case TimerxChannel1:
+                //CCRx = Duty Cycle *
+                TIMx->CCR1 = pTimConfig->CCRx; 
+                //CCMRx -> OCxM = PWM1 mode *
+                TIMx->CCMR1 |= (0b110 << 4); 
+                //CCMRx ->OC1PE = preload enable *
+                TIMx->CCMR1 |= (0b1 << 3); 
+                //Activate the output CC1E *
+                TIMx->CCER |= (0b1);
+                break;
+            case TimerxChannel2:
+                break;
+            case TimerxChannel3:
+                break;
+            case TimerxChannel4:
+                break;
+        }
+    }
+}
+void TIMxEnableCounter(TIM_t* TIMx)
+{
+    TIMx->CR1 |= (0b1);
+}
+
+void TIMxDisableCounter(TIM_t* TIMx)
+{
+    TIMx->CR1 &= ~(0b1);
+}
+
+void TIMxSetARR(TIM_t* TIMx, uint32_t ARR)
+{
+    TIMx->ARR = ARR;
+}
+
+void TIMxSetPSC(TIM_t* TIMx, uint32_t PSC)
+{
+    TIMx->PSC = PSC;
 }
 /*
-void TimEnable(TIM_t* TIMx)
-{
-    //2
-}
-void TimDisable(TIM_t* TIMx)
-{
-    //3
 
-}
-void TimSetFrecuency(uint32_t UpdateFrecuency, TIM_t* TIMx)
-{
 
-}
+
 uint8_t TimFlagStatus(TIM_t* TIMx, uint8_t FlagMask)
 {
 

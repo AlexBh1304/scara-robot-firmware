@@ -163,3 +163,15 @@ void USARTxClockControl(USART_t* pUSART, uint8_t Action)
 }
 
 
+void ChangeClockSource(ClockConfig_t* clockconfig)
+{
+    if((clockconfig->TargetClockSource) == HSE)
+    {   
+        RCC->CR |= (1 << 16);
+        while(!(RCC->CR &(1 << 17)));
+        RCC->CFGR |= (0b01);
+    }
+}
+
+
+    

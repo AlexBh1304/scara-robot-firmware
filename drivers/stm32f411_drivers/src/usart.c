@@ -10,17 +10,35 @@ void USARTInit(USART_t* pUSART, USART_Config* pConfig)
     pUSART->CR1 |= (1 << 3);
     pUSART->CR1 |= (1 << 2);
 }
-void UsartSendByte(uint8_t* byte,USART_t* pUSART)
+//void UsartSendByte(uint8_t* byte,USART_t* pUSART)
+//{
+//    while(!(pUSART->SR & (1<<7)));
+//    pUSART->DR = *byte;
+//
+//}
+void UsartSendByte(USART_t* pUSART, uint8_t* byte, uint8_t amount)
 {
-    while(!(pUSART->SR & (1<<7)));
-    pUSART->DR = *byte;
-
+    for(uint8_t i = 0; i < amount; i++)
+    {
+        while(!(pUSART->SR & (1<<7)));
+        pUSART->DR = *byte;
+        byte++;
+    }
 }
-void UsartRxByte(uint8_t* byte,USART_t* pUSART)
+void UsartRxByte(USART_t* pUSART, uint8_t* byte, uint8_t amount)
 {
-    while(!(pUSART->SR & (1 << 5)));
-    *byte = pUSART->DR;
+    for(uint8_t i = 0; i < amount; i++)
+    {
+        while(!(pUSART->SR & (1 << 5)));
+        *byte = pUSART->DR;
+        byte++;
+    }
 }
+//void UsartRxByte(USART_t* pUSART, uint8_t* byte)
+//{
+//    while(!(pUSART->SR & (1 << 5)));
+//    *byte = pUSART->DR;
+//}
 uint8_t UsartFlagStatus(uint8_t usartflag,USART_t* pUSART)
 {
     return 0;

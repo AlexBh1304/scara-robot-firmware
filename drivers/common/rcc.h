@@ -28,11 +28,24 @@
 
 #endif /*USING_STM32F1XX*/
 
+typedef struct  
+{
+    uint8_t TargetClockSource;
+    //Pll multiplier?
+}ClockConfig_t;
+
+
 void GPIOxClockControl(GPIO_t* pGPIO, uint8_t Action);
 void TIMxClockControl(TIM_t* pTIM, uint8_t Action);
 void I2CxClockControl(I2C_t* pI2C, uint8_t Action);
 void USARTxClockControl(USART_t* pUSART, uint8_t Action);
 //void ADCxClockControl(ADC_t* pADC, uint8_t Action);
-void ChangeSysClockPLL();
+void ChangeClockSource(ClockConfig_t* clockconfig);
+
+// TargetClockSource options
+#define HSI 0
+#define HSE 1
+#define PLL_HSE 2
+#define PLL_HSI 3
 
 #endif /*RCC_H*/

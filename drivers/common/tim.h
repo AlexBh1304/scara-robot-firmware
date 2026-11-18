@@ -26,20 +26,30 @@
 typedef struct{
 	uint16_t ARR;
 	uint16_t PSC;
-	uint16_t MODE;
-	uint16_t CCR1;
+	uint16_t TimerMode;
+	uint16_t CCRx;
+    uint8_t TimerxChannelx;
+    uint8_t TimerOutput;
+    uint16_t OutputPinNumber;
+    uint16_t AFNumber;
+    GPIO_t* OutputPinPort;
 }Timer_Config;
 
-void TimInit(Timer_Config* pTimConfig, TIM_t* TIMx);
-void TimEnable(TIM_t* TIMx);
-void TimDisable(TIM_t* TIMx);
-void TimSetFrecuency(uint32_t UpdateFrecuency, TIM_t* TIMx);
+void TimInit(TIM_t* TIMx, Timer_Config* pTimConfig);
+void TIMxEnableCounter(TIM_t* TIMx);
+void TIMxDisableCounter(TIM_t* TIMx);
+void TIMxSetPSC(TIM_t* TIMx, uint32_t PSC);
+void TIMxSetARR(TIM_t* TIMx, uint32_t ARR);
 uint8_t TimFlagStatus(TIM_t* TIMx, uint8_t FlagMask);
-
-
 void TimClearFlag(TIM_t* TIMx, uint8_t FlagMask);
 void TimInterruptEnable(TIM_t* TIMx, uint8_t InterruptName);
 
+#define PWM 0
+
+#define TimerxChannel1 1
+#define TimerxChannel2 2
+#define TimerxChannel3 3
+#define TimerxChannel4 4
 
 #endif /*TIM_H*/
 

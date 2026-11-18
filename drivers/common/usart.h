@@ -20,8 +20,11 @@ typedef struct
 
 
 void USARTInit(USART_t* pUSART, USART_Config* pConfig);
-void UsartSendByte(uint8_t* byte,USART_t* pUSART );
-void UsartRxByte(uint8_t* byte,USART_t* pUSART );
+
+void UsartSendByte(USART_t* pUSART, uint8_t* byte, uint8_t amount);
+//void UsartSendByte(uint8_t* byte,USART_t* pUSART );
+void UsartRxByte(USART_t* pUSART, uint8_t* byte, uint8_t amount);
+//void UsartRxByte(USART_t* pUSART, uint8_t* byte);
 uint8_t UsartFlagStatus(uint8_t usartflag,USART_t* pUSART);
 
 //Options for Data Size 

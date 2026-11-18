@@ -75,11 +75,11 @@ void I2Cx_Init(I2C_t* I2Cx, I2C_Config_t* I2C_Config)
     //SCL Alternate function AF04 con port B pin 6
     GPIOx_Config_t scl_pin_config = {0};  
     GPIOx_Config_t sda_pin_config = {0};  
-    /*if(I2C_Config->PullUp)
+    if(I2C_Config->PullUp)
     {
         scl_pin_config.PullOption = PULLUP;
         sda_pin_config.PullOption = PULLUP;
-    }*/
+    }
     scl_pin_config.Pin = I2C_Config->SCL_PinNumber;
     scl_pin_config.Mode = ALTERNATE_FUNCTION_MODE;
     scl_pin_config.OutputSpeed = HIGH_OUTPUT_SPEED;
